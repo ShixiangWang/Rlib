@@ -1,3 +1,7 @@
+# 诗翔的TCGA数据操作函数
+
+#---------------------------------------------------
+# 过滤TCGA重名ID
 #---------------------------------------------------
 # Filter TCGA Replicate Samples
 # Author: ShixiangWang <w_shixiang@163.com>
@@ -15,7 +19,7 @@
 # Ref Link: <https://confluence.broadinstitute.org/display/GDAC/FAQ#FAQ-sampleTypesQWhatTCGAsampletypesareFirehosepipelinesexecutedupon>
 #-------------------------------------------------------------------
 
-tcga_replicateFilter = function(tsb, analyte_target=c("DNA","RNA"), decreasing=TRUE, analyte_position=20, plate=c(22,25), portion=c(18,19), filter_FFPE=FALSE, full_barcode=FALSE){
+tcgaReplicateFilter = function(tsb, analyte_target=c("DNA","RNA"), decreasing=TRUE, analyte_position=20, plate=c(22,25), portion=c(18,19), filter_FFPE=FALSE, full_barcode=FALSE){
     # basically, user provide tsb and analyte_target is fine. If you
     # want to filter FFPE samples, please set filter_FFPE and full_barcode
     # all to TRUE, and tsb must have nchar of 28
@@ -235,3 +239,36 @@ tcga_replicateFilter = function(tsb, analyte_target=c("DNA","RNA"), decreasing=T
         }
     }
 }
+
+
+#------------------------------------------------------------
+# 通过manifest文件转换为TCGA ID
+# Source code from biostar and mofied for easier use
+tcgaTranslateID = function(file_ids, legacy = TRUE) {
+    # file_ids: id of download files in TCGA manifest file
+    # legacy: if TRUE, use hg19
+    if(!(require(GenomicDataCommons) & require(magrittr))){
+        install.packages(c("GenomicDataCommons", "magrittr"), dependencies = TRUE)
+    }
+    info = files(legacy = legacy) %>%
+        filter( ~ file_id %in% file_ids) %>%
+        select('cases.samples.submitter_id') %>%
+        results_all()
+    # The mess of code below is to extract TCGA barcodes
+    # id_list will contain a list (one item for each file_id)
+    # of TCGA barcodes of the form 'TCGA-XX-YYYY-ZZZ'
+    id_list = lapply(info$cases,function(a) {
+        a[[1]][[1]][[1]]})
+    # so we can later expand to a data.frame of the right size
+    barcodes_per_file = sapply(id_list,length)
+    # And build the data.frame
+    return(data.frame(file_id = rep(ids(info),barcodes_per_file),
+                      submitter_id = unlist(id_list)))
+}
+
+
+# manifest <- read.table("gdc_manifest_filePath", header = TRUE, stringsAsFactors = FALSE)
+# file_uuids <- manifest$id
+# head(file_uuids)
+# res = TCGAtranslateID(file_uuids)
+# head(res)
