@@ -8,7 +8,7 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
                              portion = c(18, 19), filter_FFPE = FALSE, full_barcode = FALSE) {
   ## Filter TCGA Replicate Samples
   ## Author: ShixiangWang <w_shixiang@163.com>
-  ## Update: 2020-03-24, improve filter logical.
+  ## Update: 2021-08-18, remove which sentence to speed up, use sort and index selection to make sure only unique sample left.
   ## ooooooo
   ## The filter rule following broad institute says:
   ##
@@ -132,7 +132,7 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
       "TCGA-BL-A13J-01B-04R-A277-07", "TCGA-BL-A13J-01B-04R-A27D-13"
     )
 
-    tsb <- setdiff(tsb, tsb[which(tsb %in% ffpe)])
+    tsb <- setdiff(tsb, tsb[tsb %in% ffpe])
   }
 
   # find repeated samples
@@ -159,7 +159,7 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
           stop = analyte_position
         )
         if (any(analytes == "D") & !(all(analytes == "D"))) {
-          aliquot <- mulaliquots[which(analytes == "D")]
+          aliquot <- mulaliquots[analytes == "D"]
 
           if (length(aliquot) != 1) {
             # Still have repeats
@@ -184,7 +184,7 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
           stop = analyte_position
         )
         if (any(analytes == "H") & !(all(analytes == "H"))) {
-          aliquot <- mulaliquots[which(analytes == "H")]
+          aliquot <- mulaliquots[analytes == "H"]
 
           if (length(aliquot) != 1) {
             # Still have repeats
@@ -198,7 +198,7 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
             dp_tsb <- setdiff(dp_tsb, mulaliquots)
           }
         } else if (any(analytes == "R") & !(all(analytes == "R"))) {
-          aliquot <- mulaliquots[which(analytes == "R")]
+          aliquot <- mulaliquots[analytes == "R"]
 
           if (length(aliquot) != 1) {
             # Still have repeats
@@ -212,7 +212,7 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
             dp_tsb <- setdiff(dp_tsb, mulaliquots)
           }
         } else if (any(analytes == "T") & !(all(analytes == "T"))) {
-          aliquot <- mulaliquots[which(analytes == "T")]
+          aliquot <- mulaliquots[analytes == "T"]
 
           if (length(aliquot) != 1) {
             # Still have repeats
@@ -246,11 +246,11 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
         )
         portion_keep <- sort(portion_codes, decreasing = decreasing)[1]
         if (!all(portion_codes == portion_keep)) {
-          if (length(which(portion_codes == portion_keep)) == 1) {
-            add_tsb <- c(add_tsb, mulaliquots[which(portion_codes == portion_keep)])
+          if (sum(portion_codes == portion_keep) == 1) {
+            add_tsb <- c(add_tsb, mulaliquots[portion_codes == portion_keep])
             dp_tsb <- setdiff(dp_tsb, mulaliquots)
           } else {
-            dp_tsb <- setdiff(dp_tsb, mulaliquots[which(portion_codes != portion_keep)])
+            dp_tsb <- setdiff(dp_tsb, mulaliquots[portion_codes != portion_keep])
           }
         }
       }
@@ -269,7 +269,7 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
             stop = plate[2]
           )
           plate_keep <- sort(plate_codes, decreasing = decreasing)[1]
-          add_tsb <- c(add_tsb, mulaliquots[which(plate_codes == plate_keep)])
+          add_tsb <- c(add_tsb, sort(mulaliquots[plate_codes == plate_keep])[1])
           dp_tsb <- setdiff(dp_tsb, mulaliquots)
         }
 
