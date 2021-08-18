@@ -13,11 +13,13 @@ install.packages("modules")
 For example, use the TCGA functions:
 
 ```R
-> tcga <- modules::use("tcga.R")
+> tcga <- modules::use("https://biosisyphus.github.io/Rlib/tcga.R")
 > tcga$filterReplicates(tsb = c("TCGA-55-7913-01B-11D-2237-01", "TCGA-55-7913-01B-11X-2237-01", "TCGA-55-7913-01B-11D-2237-01"))
 ooo Filter barcodes successfully!
 [1] "TCGA-55-7913-01B-11D-2237-01"
 ```
+
+You can also clone the repo to your local machine and then load the specific module with `modules::use("<the_path_to_module_file>")`.
 
 ## LICENSE
 
