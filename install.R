@@ -8,26 +8,26 @@
 .verbose_bioc <- function() message("See ?BiocManager::install for more options.")
 .verbose_clone <- function() message("See ?git2r::clone for more options.")
 
-#' Install R packages
-#'
-#' @param pkg A package name for Git(hub) package (e.g. `ShixiangWang/ezcox`,
-#' `ShixiangWang/wfun@main`) or
-#' a list of packages (e.g. `c("dplyr", "maftools")`) for CRAN/BioC packages.
-#' Or a file path (a directory or zip file).
-#' @param gitee If `TRUE`, install package from Gitee.
-#' @param ... Other arguments passing to [remotes::install_git],
-#' [BiocManager::install] or [remotes::install_github] based on input.
-#'
-#' @return Nothing.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' install("ShixiangWang/ezcox")
-#' install("ShixiangWang/tinyscholar", gitee = TRUE)
-#' install(c("ggplot2", "Biobase"))
-#' }
 install <- function(pkg, gitee = FALSE, ...) {
+  ## Install R packages
+  ##
+  ## @param pkg A package name for Git(hub) package (e.g. `ShixiangWang/ezcox`,
+  ## `ShixiangWang/wfun@main`) or
+  ## a list of packages (e.g. `c("dplyr", "maftools")`) for CRAN/BioC packages.
+  ## Or a file path (a directory or zip file).
+  ## @param gitee If `TRUE`, install package from Gitee.
+  ## @param ... Other arguments passing to [remotes::install_git],
+  ## [BiocManager::install] or [remotes::install_github] based on input.
+  ##
+  ## @return Nothing.
+  ## @export
+  ##
+  ## @examples
+  ## \dontrun{
+  ## install("ShixiangWang/ezcox")
+  ## install("ShixiangWang/tinyscholar", gitee = TRUE)
+  ## install(c("ggplot2", "Biobase"))
+  ## }
   if (file.exists(pkg) || dir.exists(pkg)) {
     if (dir.exists(pkg)) {
       message("Installing package from a directory...")
@@ -79,27 +79,29 @@ install <- function(pkg, gitee = FALSE, ...) {
   return(invisible(0))
 }
 
-#' Clone a Git repository
-#'
-#' @inheritParams git2r::clone
-#' @param gitee If `TRUE`, clone repository from Gitee.
-#' @param reset_remote if `TRUE`, reset GitHub repository remote url.
-#' @param ... Other arguments passing to [git2r::clone]
-#'
-#' @return Nothing
-#' @export
-#'
-#' @examples
-#' \donttest{
-#' x <- file.path(tempdir(), "ezcox")
-#' if (dir.exists(x)) rm_paths(x)
-#' clone("ShixiangWang/ezcox", x, reset_remote = TRUE)
-#'
-#' y <- file.path(tempdir(), "tinyscholar")
-#' if (dir.exists(y)) rm_paths(y)
-#' clone("ShixiangWang/tinyscholar", y, gitee = TRUE)
-#' }
+
 clone <- function(url, local_path, gitee = FALSE, reset_remote = FALSE, ...) {
+  ## Clone a Git repository
+  ##
+  ## @inheritParams git2r::clone
+  ## @param gitee If `TRUE`, clone repository from Gitee.
+  ## @param reset_remote if `TRUE`, reset GitHub repository remote url.
+  ## @param ... Other arguments passing to [git2r::clone]
+  ##
+  ## @return Nothing
+  ## @export
+  ##
+  ## @examples
+  ## \donttest{
+  ## x <- file.path(tempdir(), "ezcox")
+  ## if (dir.exists(x)) rm_paths(x)
+  ## clone("ShixiangWang/ezcox", x, reset_remote = TRUE)
+  ##
+  ## y <- file.path(tempdir(), "tinyscholar")
+  ## if (dir.exists(y)) rm_paths(y)
+  ## clone("ShixiangWang/tinyscholar", y, gitee = TRUE)
+  ## }
+  
   stopifnot(length(url) == 1L)
   .check_install("git2r")
 
@@ -128,24 +130,24 @@ clone <- function(url, local_path, gitee = FALSE, reset_remote = FALSE, ...) {
   }
 }
 
-#' Download GitHub/Gitee repo release or archive file
-#'
-#' @param repo A GitHub/Gitee repo in the format of `username/repo`, e.g. `ShixiangWang/tinyscholar`.
-#' @param destdir A target path to save the file.
-#' @param release Set to the version number (e.g. `v1.0`) for downloading release file.
-#' @param gitee If `TRUE`, download from Gitee repo instead of GitHub repo.
-#' @param ... Other arguments passing to [utils::download.file].
-#'
-#' @return Nothing
-#' @export
-#'
-#' @examples
-#' \donttest{
-#' x <- tempdir()
-#' download("ShixiangWang/tinyscholar", destdir = x)
-#' dir(x)
-#' }
 download <- function(repo, destdir, release = NULL, gitee = FALSE, ...) {
+  ## Download GitHub/Gitee repo release or archive file
+  ##
+  ## @param repo A GitHub/Gitee repo in the format of `username/repo`, e.g. `ShixiangWang/tinyscholar`.
+  ## @param destdir A target path to save the file.
+  ## @param release Set to the version number (e.g. `v1.0`) for downloading release file.
+  ## @param gitee If `TRUE`, download from Gitee repo instead of GitHub repo.
+  ## @param ... Other arguments passing to [utils::download.file].
+  ##
+  ## @return Nothing
+  ## @export
+  ##
+  ## @examples
+  ## \donttest{
+  ## x <- tempdir()
+  ## download("ShixiangWang/tinyscholar", destdir = x)
+  ## dir(x)
+  ## }
   stopifnot(
     length(repo) == 1L, length(destdir) == 1L,
     is.character(repo), is.character(destdir)
@@ -175,16 +177,6 @@ download <- function(repo, destdir, release = NULL, gitee = FALSE, ...) {
 # Copy from yu utils ------------------------------------------------------
 # source: https://github.com/YuLab-SMU/yulab.utils/blob/master/R/.install_zip.R
 
-##' install github package
-##'
-##' it download the zip file first and use `.install_zip` to install it
-##' @title .install_zip_gh
-##' @param repo github repo
-##' @param ref github branch, default is master
-##' @param args argument to build package
-##' @return NULL
-##' @export
-##' @author Guangchuang Yu
 .install_zip_gh <- function(repo, ref = "master", args = "--no-build-vignettes") {
   url <- paste0("https://codeload.github.com/", repo, "/zip/", ref)
   f <- tempfile(fileext = ".zip")
@@ -194,15 +186,6 @@ download <- function(repo, destdir, release = NULL, gitee = FALSE, ...) {
   .install_zip(f, args = args)
 }
 
-##' install R package from zip file of source codes
-##'
-##'
-##' @title .install_zip
-##' @param file zip file
-##' @param args argument to build package
-##' @return NULL
-##' @export
-##' @author Guangchuang Yu
 .install_zip <- function(file, args = "--no-build-vignettes") {
   .check_install("pkgbuild")
 
@@ -221,6 +204,9 @@ download <- function(repo, destdir, release = NULL, gitee = FALSE, ...) {
 # Save the script to local ------------------------------------------------
 
 save <- function() {
+  ## Save the module to R default config file ~/.Rprofile
+  ## so the module will be available when RStudio starts.
+  
   message("Downloading script...")
   url <- "https://biosisyphus.github.io/Rlib/install.R"
   if (!dir.exists(path.expand("~/.R"))) dir.create(path.expand("~/.R"))
