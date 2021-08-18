@@ -21,6 +21,18 @@ ooo Filter barcodes successfully!
 
 You can also clone the repo to your local machine and then load the specific module with `modules::use("<the_path_to_module_file>")`.
 
+## Modules
+
+Modules are saved as single files in the repo. All dependencies are well controlled or would be installed after starting the function
+you want to run.
+
+**Please file an issue if you find any bugs.**
+
+Module list:
+
+- `tcga.R` -  contains functions useful for processing TCGA data.
+- `install.R` - contains functions useful for installing packages.
+
 ## LICENSE
 
 [GPL-3](LICENSE)
