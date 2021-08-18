@@ -54,6 +54,8 @@ Module list:
 
 - `tcga.R` -  contains functions useful for processing TCGA data.
 - `install.R` - contains functions useful for installing packages.
+- `vis.R` - contains functions useful for plotting.
+- `path.R` - contains functions useful for operating local paths (files, directories).
 
 ## LICENSE
 
