@@ -1,5 +1,9 @@
-.check_install <- function(pkg) {
-  if (!requireNamespace(pkg)) install.packages(pkg)
+.check_install <- function(pkg, bioc = FALSE, ...) {
+  install_func <- if (bioc) BiocManager::install else utils::install.packages
+  if (bioc) {
+    .check_install("BiocManager")
+  }
+  if (!requireNamespace(pkg)) install_func(pkg, ...)
   message("Required package ", pkg, " has been installed.")
 }
 

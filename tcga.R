@@ -1,6 +1,9 @@
 # Copyright (C) Shixiang Wang
 # LICENSE: GPL3
 
+# Other TCGA utils: https://bioconductor.org/packages/release/bioc/vignettes/TCGAutils/inst/doc/TCGAutils.html
+
+
 # 过滤TCGA重名ID --------------------------------------------------------------
 
 filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"), 
@@ -286,36 +289,25 @@ filterReplicates <- function(tsb, analyte_target = c("DNA", "RNA"),
 }
 
 # translateID ------------------------------------------------------------
-translateID <- function(file_ids, legacy = TRUE) {
-  ## 通过manifest文件转换为TCGA ID
-  ## Source code from biostar and has been modified for easier use
-  ## file_ids: id of download files in TCGA manifest file
-  ## legacy: if TRUE, use hg19
-  if (!(require(GenomicDataCommons) & require(magrittr))) {
-    install.packages(c("GenomicDataCommons", "magrittr"), dependencies = TRUE)
-  }
-  info <- files(legacy = legacy) %>%
-    filter(~ file_id %in% file_ids) %>%
-    select("cases.samples.submitter_id") %>%
-    results_all()
-  # The mess of code below is to extract TCGA barcodes
-  # id_list will contain a list (one item for each file_id)
-  # of TCGA barcodes of the form 'TCGA-XX-YYYY-ZZZ'
-  id_list <- lapply(info$cases, function(a) {
-    a[[1]][[1]][[1]]
-  })
-  # so we can later expand to a data.frame of the right size
-  barcodes_per_file <- sapply(id_list, length)
-  # And build the data.frame
-  return(data.frame(
-    file_id = rep(ids(info), barcodes_per_file),
-    submitter_id = unlist(id_list)
-  ))
+translateID <- function(id, type = c("file_id", "case_id", "aliquot_ids"), legacy = FALSE) {
+  ## Translcate GDC UUID to sample barcode
+  ##
+  ## @param a vector of UUID.
+  ##
+  ## @examples
+  ## translateID("719fc310-5ff5-4493-a421-1533583baca1")
+  .check_install("TCGAutils", bioc = TRUE)
+  type <- match.arg(type)
+  TCGAutils::UUIDtoBarcode(id, type, legacy)
 }
 
+# Utils -------------------------------------------------------------------
 
-# manifest <- read.table("gdc_manifest_filePath", header = TRUE, stringsAsFactors = FALSE)
-# file_uuids <- manifest$id
-# head(file_uuids)
-# res = TCGAtranslateID(file_uuids)
-# head(res)
+.check_install <- function(pkg, bioc = FALSE, ...) {
+  install_func <- if (bioc) BiocManager::install else utils::install.packages
+  if (bioc) {
+    .check_install("BiocManager")
+  }
+  if (!requireNamespace(pkg)) install_func(pkg, ...)
+  message("Required package ", pkg, " has been installed.")
+}
