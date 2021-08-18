@@ -225,16 +225,16 @@ save <- function() {
   url <- "https://biosisyphus.github.io/Rlib/install.R"
   if (!dir.exists(path.expand("~/.R"))) dir.create(path.expand("~/.R"))
   tryCatch(
-    download.file(url, destfile = file.path(path.expand("~/.R"), "install.R")),
+    utils::download.file(url, destfile = file.path(path.expand("~/.R"), "install.R")),
     error = function(e) {
       message("Try downloading from gitee...")
       url <- "https://gitee.com/BioSisyphus/Rlib/raw/master/install.R"
-      download.file(url, destfile = file.path(path.expand("~/.R"), "install.R"))
+      utils::download.file(url, destfile = file.path(path.expand("~/.R"), "install.R"))
     }
   )
   if (!file.exists(path.expand("~/.Rprofile"))) file.create(path.expand("~/.Rprofile"))
   
   message("Writing to config file ~/.Rprofile...")
-  writeLines(paste0("\nsource(", file.path(path.expand("~/.R"), "install.R"), ")"), path.expand("~/.Rprofile"))
+  write(paste0("\nsource(\"", file.path(path.expand("~/.R"), "install.R\""), ", local = TRUE)"), path.expand("~/.Rprofile"), append = TRUE)
   message("Done. Please restart your R session and see if you can directly use `install()` function.")
 }
