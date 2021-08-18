@@ -235,6 +235,6 @@ save <- function() {
   if (!file.exists(path.expand("~/.Rprofile"))) file.create(path.expand("~/.Rprofile"))
   
   message("Writing to config file ~/.Rprofile...")
-  write(paste0("\nsource(\"", file.path(path.expand("~/.R"), "install.R\""), ", local = TRUE)"), path.expand("~/.Rprofile"), append = TRUE)
-  message("Done. Please restart your R session and see if you can directly use `install()` function.")
+  write(paste0("\ninstall <- modules::use(\"", file.path(path.expand("~/.R"), "install.R\""), ")"), path.expand("~/.Rprofile"), append = TRUE)
+  message("Done. Please restart your R session and see if you can directly use `install$xx` function.")
 }
