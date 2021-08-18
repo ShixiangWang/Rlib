@@ -26,6 +26,28 @@ You can also clone the repo to your local machine and then load the specific mod
 Modules are saved as single files in the repo. All dependencies are well controlled or would be installed after starting the function
 you want to run.
 
+Use the following way to check public functions available in a module:
+
+```R
+> install
+clone:
+function(url, local_path, gitee = FALSE, reset_remote = FALSE, ...)
+
+
+download:
+function(repo, destdir, release = NULL, gitee = FALSE, ...)
+
+
+install:
+function(pkg, gitee = FALSE, ...)
+
+
+save:
+function()
+```
+
+You may need to check the source file in the GitHub/Gitee repo to read the detail documentation.
+
 **Please file an issue if you find any bugs.**
 
 Module list:
