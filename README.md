@@ -57,6 +57,15 @@ Module list:
 - `vis.R` - contains functions useful for plotting.
 - `path.R` - contains functions useful for operating local paths (files, directories).
 
+## Citation
+
+If you are using this library for your research, please cite the following papers properly along with the link to the GitHub repository <https://github.com/BioSisyphus/Rlib>.
+
+- Wang, Shixiang, et al. "Antigen presentation and tumor immunogenicity in cancer immunotherapy response prediction." Elife 8 (2019): e49020.
+- Wang, Shixiang, and Xuesong Liu. "The UCSCXenaTools R package: a toolkit for accessing genomics data from UCSC Xena platform, from cancer multi-omics to single-cell RNA-seq." (2019).
+- Ramos, M., L. Schiffer, and L. Waldron. "TCGAutils: TCGA utility functions for data management." R package version 1.0 (2019).
+- Robin, Xavier, et al. "pROC: an open-source package for R and S+ to analyze and compare ROC curves." BMC bioinformatics 12.1 (2011): 1-8.
+
 ## LICENSE
 
 [GPL-3](LICENSE)
