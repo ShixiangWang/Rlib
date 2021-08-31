@@ -37,8 +37,13 @@ install <- function(pkg, gitee = FALSE, ...) {
       message("Installing package from a directory...")
       utils::install.packages(pkg, repos = NULL)
     } else {
-      message("Installing package from a zip file")
-      .install_zip(pkg)
+      if (endsWith(pkg, "tar.gz")) {
+        message("Installing source package from a tar.gz file")
+        utils::install.packages(pkg, repos = NULL)
+      } else {
+        message("Installing package from a zip file")
+        .install_zip(pkg)
+      }
     }
     return(invisible(0))
   }
